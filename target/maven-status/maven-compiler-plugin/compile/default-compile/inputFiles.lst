@@ -1,5 +1,8 @@
 D:\JAVA\java-projects\myClient\src\main\java\module-info.java
-D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\myClient\Product.java
-D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\myClient\ProductManager.java
-D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\myClient\ProductController.java
-D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\myClient\App.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\utils\ViewHelper.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\controller\ProductController.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\model\PershableProduct.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\controller\NextController.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\model\Product.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\App.java
+D:\JAVA\java-projects\myClient\src\main\java\de\kozdemir\client\model\ProductRepository.java

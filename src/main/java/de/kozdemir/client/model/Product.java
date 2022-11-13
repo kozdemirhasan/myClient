@@ -1,33 +1,27 @@
-package de.kozdemir.myClient;
+package de.kozdemir.client.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import de.kozdemir.client.utils.ViewHelper;
 
 public class Product implements Serializable {
-	private int id; 
+
+	private static final long serialVersionUID = -2414755322282835416L;
+
 	private String name;
 	private String description;
 	private int amount;
 	private double price;
 	private LocalDate createdAt;
-	
-	private static int count; //Class Variable count
+
 
 	public Product() {
 		createdAt = LocalDate.now();
 		setCreatedAt(createdAt);
-		setId(++count);
 		
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;
@@ -61,9 +55,18 @@ public class Product implements Serializable {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	//price format
+	public String getPriceDE() {
+		return String.format("%.2f", price);
+	}
 
 	public LocalDate getCreatedAt() {
 		return createdAt;
+	}
+	
+	//date format
+	public String getCreatedAtDE() {
+		return createdAt.format(ViewHelper.DATE_FMT);
 	}
 
 	public void setCreatedAt(LocalDate createdAt) {

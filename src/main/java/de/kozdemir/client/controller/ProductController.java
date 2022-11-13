@@ -1,8 +1,12 @@
-package de.kozdemir.myClient;
+package de.kozdemir.client.controller;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import de.kozdemir.client.App;
+import de.kozdemir.client.model.Product;
+import de.kozdemir.client.model.ProductRepository;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -12,7 +16,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
-public class ProductController implements Initializable  {
+public class ProductController implements Initializable {
 
 	@FXML
 	private TextField name;
@@ -23,22 +27,21 @@ public class ProductController implements Initializable  {
 	@FXML
 	private TextField price;
 	@FXML
-	private Label fehler;	
+	private Label fehler;
 	@FXML
 	private TableView<Product> tblProducts;
-	
 
-	private ProductManager management = new ProductManager();
-	private Integer counter=0;
+	private ProductRepository management = new ProductRepository();
 
 	@FXML
-	private void save() throws IOException {		
+	private void switchToNext() throws IOException {
+		App.setRoot("next");
+	}
 
-		Product product = new Product();	
-		
-		letzteIDFind(); //letzte ID Find
-		product.setId(++counter);
-		
+	@FXML
+	private void save() throws IOException {
+		Product product = new Product();
+
 		product.setName(name.getText());
 		product.setDescription(description.getText());
 		try {
@@ -48,42 +51,38 @@ public class ProductController implements Initializable  {
 			management.add(product);
 			clearForm();
 			show();
-		}catch(NumberFormatException e) {
-			fehler.setText("price and/or quantity part invalid!");
+		} catch (NumberFormatException e) {
+			fehler.setText("invalid amount and/or price !");
 		}
-		
 	}
 
-    private void clearForm() {
-    	name.clear();
-    	description.clear();
-    	amount.clear();
-    	price.clear();
-    }
-	
+	@FXML
+	private void delete() {
+		// TODO: Exception fangen
+		Product p = tblProducts.getSelectionModel().getSelectedItem();
+		management.delete(p);
+		show();
+	}
+
+	private void clearForm() {
+		name.clear();
+		description.clear();
+		amount.clear();
+		price.clear();
+	}
+
 	private void show() {
-		management.listProductsConcole(); // console
 		try {
-			tblProducts.setItems(FXCollections.observableList(management.getAll()));	//table print			
-		}catch(NullPointerException e) {
+			tblProducts.setItems(FXCollections.observableList(management.getAll())); // table print
+		} catch (NullPointerException e) {
 			System.out.println("Null liste...");
 		}
- 
-	}
-	
-	private void letzteIDFind() {
-		for (Product t : management.getAll()) {
-			if (t.getId() > counter) {
-				counter = t.getId();
-
-			}
-		}
 
 	}
-	
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		show();
-		
+
 	}
 }
