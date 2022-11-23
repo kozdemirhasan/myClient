@@ -5,30 +5,30 @@ import java.time.LocalDate;
 
 import de.kozdemir.client.utils.ViewHelper;
 
-public class Product implements Serializable {
 
-	private static final long serialVersionUID = -2414755322282835416L;
+// Model
+public class Product implements Serializable {
+	
+	private static final long serialVersionUID = 7273045516007784747L;
 
 	private int id;
+
 	private String name;
 	private String description;
 	private int amount;
 	private double price;
-	private LocalDate createdAt;
-
+	private LocalDate createdAt; // YYYY-MM-dd
 
 	public Product() {
 		createdAt = LocalDate.now();
-		setCreatedAt(createdAt);
-		
 	}
 
-	public int getId() {
-		return id;
+	public int getAmount() {
+		return amount;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setAmount(int amount) {
+		this.amount = amount;
 	}
 
 	public String getName() {
@@ -46,33 +46,23 @@ public class Product implements Serializable {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-
-	public int getAmount() {
-		return amount;
-	}
-
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
 
 	public double getPrice() {
 		return price;
 	}
+	
+	public String getPriceDE() {
+		return String.format("%.2f", price);
+	}
 
 	public void setPrice(double price) {
 		this.price = price;
-	}
-	//price format
-	public String getPriceDE() {
-		return String.format("%.2f", price);
 	}
 
 	public LocalDate getCreatedAt() {
 		return createdAt;
 	}
 	
-	//date format
 	public String getCreatedAtDE() {
 		return createdAt.format(ViewHelper.DATE_FMT);
 	}
@@ -80,18 +70,32 @@ public class Product implements Serializable {
 	public void setCreatedAt(LocalDate createdAt) {
 		this.createdAt = createdAt;
 	}
-	
 
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Product [name=").append(name).append(", description=").append(description).append(", price=")
-				.append(price).append(", createdAt=").append(createdAt).append("]\n");
+		builder.append("Product [id=")
+			.append(id)
+			.append(", name=")
+			.append(name)
+			.append(", description=")
+			.append(description)
+			.append(", amount=")
+			.append(amount)
+			.append(", price=")
+			.append(price)
+			.append(", createdAt=")
+			.append(createdAt)
+			.append("]");
 		
 		return builder.toString();
-	}
-
-
+	}	
 }
