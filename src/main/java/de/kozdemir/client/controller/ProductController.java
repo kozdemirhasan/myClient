@@ -3,6 +3,7 @@ package de.kozdemir.client.controller;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import de.kozdemir.client.App;
@@ -11,13 +12,16 @@ import de.kozdemir.client.model.ProductDbRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.util.StringConverter;
 
 public class ProductController implements Initializable {
 
@@ -32,6 +36,8 @@ public class ProductController implements Initializable {
 	@FXML
 	private TextField search;
 	@FXML
+	private ComboBox<Locale> langSwitch;
+	@FXML
 	private Label fehler;
 	@FXML
 	private TableView<Product> tblProducts;
@@ -40,14 +46,13 @@ public class ProductController implements Initializable {
 
 	@FXML
 	private void switchToNext() throws IOException {
-		App.setRoot("next");
+		App.setRoot("controller/next");
 	}
-	
+
 	@FXML
 	private void search() throws SQLException {
 		tblProducts.setItems(FXCollections.observableList(management.search(search.getText()))); // search print
 	}
-	
 
 	@FXML
 	private void insert() {
@@ -94,11 +99,14 @@ public class ProductController implements Initializable {
 		show();
 	}
 
+	@FXML
 	private void clearForm() {
 		name.clear();
 		description.clear();
 		amount.clear();
 		price.clear();
+		search.clear();
+		show();
 	}
 
 	@FXML
@@ -114,6 +122,13 @@ public class ProductController implements Initializable {
 		}
 	}
 
+	@FXML
+	public void changeLang() throws IOException {
+		Locale selection = langSwitch.getSelectionModel().getSelectedItem();
+		Locale.setDefault(selection);
+		App.setRoot("controller/standard");
+	}
+
 	private void show() {
 		try {
 			tblProducts.setItems(FXCollections.observableList(management.find())); // table print
@@ -127,17 +142,40 @@ public class ProductController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 
+
+		tblProducts.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+			showInForm();
+		} // select tabPerson and person details printed
+		);
+
+		// füllen Combobox
+		ObservableList<Locale> languages = FXCollections.observableArrayList(Locale.ENGLISH, Locale.GERMAN,
+				Locale.FRENCH);
+		langSwitch.setItems(languages);
+
+		StringConverter<Locale> converter = new StringConverter<Locale>() {
+			@Override
+			public String toString(Locale loc) {
+				return loc.getDisplayLanguage();
+			}
+
+			@Override
+			public Locale fromString(String string) {
+				return null;
+			}
+		};
+
+		langSwitch.setConverter(converter);
+		langSwitch.getSelectionModel().select(Locale.getDefault());
+		
+		
+
 		try {
 			management = ProductDbRepository.getInstance();
 		} catch (SQLException e) {
 			// TODO: Ausgabe in der Oberfläche
 			throw new RuntimeException(e);
 		}
-
-		tblProducts.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			showInForm();
-		} // select tabPerson and person details printed
-		);
 
 		show();
 

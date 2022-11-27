@@ -9,7 +9,7 @@ public class NextController {
 
 	@FXML
 	public void switchToStandard() throws IOException {
-		App.setRoot("standard");
+		App.setRoot("controller/standard");
 	}
 
 }
