@@ -12,10 +12,10 @@ import java.util.List;
 
 import de.kozdemir.client.utils.ViewHelper;
 
-
 public class ProductMysqlRepository {
 
 	private static final String TABLE = "products";
+	private static final String USERS = "users";
 
 	List<Product> products;
 
@@ -156,20 +156,36 @@ public class ProductMysqlRepository {
 	}
 
 	private boolean createTable() throws SQLException {
-		try(Connection dbh = DatabaseUtils.getConnection(); Statement stmt = dbh.createStatement()) {
-			
+		try (Connection dbh = DatabaseUtils.getConnection(); Statement stmt = dbh.createStatement()) {
+
 			final String SQL = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
-					+ "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
-					+ "name VARCHAR(50),"
-					+ "description TEXT,"
-					+ "amount INTEGER, " 
-					+ "price REAL, "
-					+ "created_at TEXT" 
-					+" )";
+					+ "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY," + "name VARCHAR(50),"
+					+ "description TEXT," + "amount INTEGER, " + "price REAL, " + "created_at TEXT" + " )";
 			return stmt.executeUpdate(SQL) > 0;
 		}
 	}
-	
 
+	/*************** USER CONTROLLER ******************/
+
+	public User userController(String userName, String password) throws SQLException {
+		
+		User user = null;
+
+		final String SQL = "SELECT * FROM " + USERS + " WHERE user_name = '" + userName + "' AND password = '"
+				+ password + "'";
+
+		try (Connection con = DatabaseUtils.getConnection(); Statement stmt = con.createStatement()) {
+
+			if (stmt.execute(SQL)) {
+				ResultSet results = stmt.getResultSet();
+				while (results.next())
+					return new User(results.getInt("id"), results.getString("user_name"), results.getString("password"),
+							results.getString("email"), results.getInt("status"));
+			}
+		}
+
+		return user;
+
+	}
 
 }

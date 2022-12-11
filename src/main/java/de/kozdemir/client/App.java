@@ -20,7 +20,7 @@ public class App extends Application {
 		scene = new Scene(loadFXML("controller/login"));
 		stage.setScene(scene);
 //		 stage.setResizable(false);
-		 stage.setTitle("Login");
+		 stage.setTitle("Products Manager");
 		stage.show();
 	}
 
