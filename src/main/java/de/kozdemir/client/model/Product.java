@@ -2,6 +2,7 @@ package de.kozdemir.client.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import de.kozdemir.client.utils.ViewHelper;
 
@@ -18,9 +19,8 @@ public class Product implements Serializable {
 
 
 	public Product() {
-		createdAt = LocalDate.now();
-		setCreatedAt(createdAt);
-		
+		createdAt = LocalDate.now() ;			
+		setCreatedAt(createdAt);		
 	}
 
 	public int getId() {
@@ -75,6 +75,7 @@ public class Product implements Serializable {
 	//date format
 	public String getCreatedAtDE() {
 		return createdAt.format(ViewHelper.DATE_FMT);
+//		return createdAt.format(ViewHelper.DATE_US_FMT);
 	}
 
 	public void setCreatedAt(LocalDate createdAt) {

@@ -16,9 +16,11 @@ public class App extends Application {
 
 	@Override
 	public void start(Stage stage) throws IOException {
-		scene = new Scene(loadFXML("controller/start-screen"));
+//		scene = new Scene(loadFXML("controller/start-screen"));
+		scene = new Scene(loadFXML("controller/login"));
 		stage.setScene(scene);
-		 stage.setResizable(false);
+//		 stage.setResizable(false);
+		 stage.setTitle("Login");
 		stage.show();
 	}
 
@@ -29,6 +31,8 @@ public class App extends Application {
 	private static Parent loadFXML(String fxml) throws IOException {
 //		FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
 //		return fxmlLoader.load();
+		
+		
 
 //		Locale lang = Locale.GERMAN;
 //		Locale lang = Locale.UK;

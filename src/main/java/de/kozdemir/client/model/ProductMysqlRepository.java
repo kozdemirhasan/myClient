@@ -12,28 +12,26 @@ import java.util.List;
 
 import de.kozdemir.client.utils.ViewHelper;
 
-public class ProductDbRepository {
+
+public class ProductMysqlRepository {
 
 	private static final String TABLE = "products";
 
 	List<Product> products;
-	
 
-	private static ProductDbRepository instance;
+	private static ProductMysqlRepository instance;
 
-	private ProductDbRepository() throws SQLException {
+	private ProductMysqlRepository() throws SQLException {
 		createTable();
 	}
 
-	public static ProductDbRepository getInstance() throws SQLException {
+	public static ProductMysqlRepository getInstance() throws SQLException {
 		if (instance == null) {
-			instance = new ProductDbRepository(); // LAZY
+			instance = new ProductMysqlRepository(); // LAZY
 		}
 		return instance;
 	}
 
-	
-	
 	public List<Product> getAll() throws SQLException {
 
 		final String SQL = "SELECT * FROM " + TABLE;
@@ -55,20 +53,20 @@ public class ProductDbRepository {
 	public Product findById(int id) {
 		throw new UnsupportedOperationException("Noch nicht implementiert");
 	}
-	
+
 	public List<Product> search(String str) {
-		
+
 		List<Product> searchList = new ArrayList<>();
-		
-		for(Product p: products) {
-			if(p.getName().toLowerCase().indexOf(str.toLowerCase())>=0)
+
+		for (Product p : products) {
+			if (p.getName().toLowerCase().indexOf(str.toLowerCase()) >= 0)
 				searchList.add(p);
-			else if(p.getDescription().toLowerCase().indexOf(str.toLowerCase())>=0)
+			else if (p.getDescription().toLowerCase().indexOf(str.toLowerCase()) >= 0)
 				searchList.add(p);
-			
+
 		}
 		return searchList;
-		
+
 	}
 
 	public boolean save(Product p) throws SQLException {
@@ -94,13 +92,17 @@ public class ProductDbRepository {
 //			stmt.setString(5, p.getCreatedAtDE().toString());
 
 			if (stmt.execute()) {
-				// Lösung für SQLite
-				ResultSet keys = con.createStatement().executeQuery("SELECT last_insert_rowid()");
-				if (keys.next()) {
-					p.setId(keys.getInt("last_insert_rowid()"));
-					return true;
-				}
+				return true;
 			}
+
+//			if (stmt.execute()) {
+//				// Lösung für SQLite
+//				ResultSet keys = con.createStatement().executeQuery("SELECT last_insert_rowid()");
+//				if (keys.next()) {
+//					p.setId(keys.getInt("last_insert_rowid()"));
+//					return true;
+//				}
+//			}
 		}
 		return false;
 	}
@@ -153,17 +155,21 @@ public class ProductDbRepository {
 		return p;
 	}
 
-	private void createTable() throws SQLException {
-
-		final String SQL = "CREATE TABLE IF NOT EXISTS " + TABLE + " (" + "id INTEGER, " + "name TEXT NOT NULL, "
-				+ "description TEXT, " + "amount INTEGER, " + "price REAL, " + "created_at TEXT, "
-				+ "PRIMARY KEY (id AUTOINCREMENT))";
-
-		try (Connection con = DatabaseUtils.getConnection(); Statement stmt = con.createStatement()) {
-			stmt.execute(SQL);
+	private boolean createTable() throws SQLException {
+		try(Connection dbh = DatabaseUtils.getConnection(); Statement stmt = dbh.createStatement()) {
+			
+			final String SQL = "CREATE TABLE IF NOT EXISTS " + TABLE + " ("
+					+ "id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,"
+					+ "name VARCHAR(50),"
+					+ "description TEXT,"
+					+ "amount INTEGER, " 
+					+ "price REAL, "
+					+ "created_at TEXT" 
+					+" )";
+			return stmt.executeUpdate(SQL) > 0;
 		}
 	}
-
 	
-}
 
+
+}

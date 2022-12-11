@@ -9,18 +9,21 @@ import java.util.ResourceBundle;
 import de.kozdemir.client.App;
 import de.kozdemir.client.model.Product;
 import de.kozdemir.client.model.ProductDbRepository;
+import de.kozdemir.client.model.ProductMysqlRepository;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.util.StringConverter;
 
 public class ProductController implements Initializable {
@@ -42,7 +45,8 @@ public class ProductController implements Initializable {
 	@FXML
 	private TableView<Product> tblProducts;
 
-	private ProductDbRepository management;
+//	private ProductDbRepository management;
+	private ProductMysqlRepository management;
 
 	@FXML
 	private void switchToNext() throws IOException {
@@ -91,9 +95,14 @@ public class ProductController implements Initializable {
 		// TODO: Exception fangen
 		Product p = tblProducts.getSelectionModel().getSelectedItem();
 		try {
-			management.delete(p);
+			if (p == null) {
+				
+				alertError("WARNUNG!!", "Wählen Sie ein Produkt für die Löschung aus");
+				
+			} else {
+				management.delete(p);
+			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		show();
@@ -131,7 +140,7 @@ public class ProductController implements Initializable {
 
 	private void show() {
 		try {
-			tblProducts.setItems(FXCollections.observableList(management.find())); // table print
+			tblProducts.setItems(FXCollections.observableList(management.getAll())); // table print
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -141,7 +150,6 @@ public class ProductController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
 
 		tblProducts.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			showInForm();
@@ -167,11 +175,10 @@ public class ProductController implements Initializable {
 
 		langSwitch.setConverter(converter);
 		langSwitch.getSelectionModel().select(Locale.getDefault());
-		
-		
 
 		try {
-			management = ProductDbRepository.getInstance();
+//			management = ProductDbRepository.getInstance();
+			management = ProductMysqlRepository.getInstance();
 		} catch (SQLException e) {
 			// TODO: Ausgabe in der Oberfläche
 			throw new RuntimeException(e);
@@ -179,5 +186,14 @@ public class ProductController implements Initializable {
 
 		show();
 
+	}
+
+	
+	private void alertError(String titel, String info) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(titel);
+		alert.setHeaderText(info);
+//		alert.setContentText(alert.toString());
+		alert.showAndWait();
 	}
 }
